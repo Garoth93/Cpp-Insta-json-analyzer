@@ -6,7 +6,7 @@
 class Engine
 {
 private:
-    ProfileManagement * profileManagement=nullptr;
+    ProfileManagement * profileManagement = nullptr;
     QString pathDirectoryFile;
 
 public:
@@ -25,6 +25,10 @@ public:
     void populateFollowerList();
     void populateFollowingList();
     void populatePendinfRequestFollowingList();
+
+    bool createTxtPendingRequest(QString & pathFileReturn,QString dir,QString nomeFile = "pendingRequest.txt");
+    bool createTxtDontFollowing(QString & pathFileReturn,QString dir,QString nomeFile = "dontFollowing.txt");
+    bool createTxtDontFollower(QString & pathFileReturn,QString dir,QString nomeFile = "dontFollower.txt");
 };
 
 #endif // ENGINE_H

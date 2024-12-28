@@ -4,6 +4,8 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QStandardPaths>
+#include <QDesktopServices>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -41,6 +43,72 @@ void MainWindow::init()
         popoluateNoFollower();
         pulatePendinfRequestFollowing();
     });
+
+    ui->pb_txtDontFollow->setIcon(QIcon(":/icons/csv.png"));
+    ui->pb_txtDontFollow->setToolTip(QString("Crea csv degli account che non segui"));
+    connect(ui->pb_txtDontFollow, &QPushButton::clicked, [=](){
+        QString dir = selectDirectory()+"/";
+
+        QString filePathReturn = "";
+
+        if(engine.createTxtDontFollowing(filePathReturn,dir))
+        {
+            QMessageBox msg;
+            msg.setText(QString("creato file %1").arg(filePathReturn));
+            msg.exec();
+        }
+    });
+
+    ui->pb_txtTheyDontFollow->setIcon(QIcon(":/icons/csv.png"));
+    ui->pb_txtTheyDontFollow->setToolTip(QString("Crea csv degli account che non ti seguono"));
+    connect(ui->pb_txtTheyDontFollow, &QPushButton::clicked, [=](){
+        QString dir = selectDirectory()+"/";
+
+        QString filePathReturn = "";
+
+        if(engine.createTxtDontFollower(filePathReturn,dir))
+        {
+            QMessageBox msg;
+            msg.setText(QString("creato file %1").arg(filePathReturn));
+            msg.exec();
+        }
+    });
+
+    ui->pb_txtPending->setIcon(QIcon(":/icons/csv.png"));
+    ui->pb_txtPending->setToolTip(QString("Crea csv degli account con richieste inviate"));
+    connect(ui->pb_txtPending, &QPushButton::clicked, [=](){
+        QString dir = selectDirectory()+"/";
+
+        QString filePathReturn = "";
+
+        if(engine.createTxtPendingRequest(filePathReturn,dir))
+        {
+            QMessageBox msg;
+            msg.setText(QString("creato file %1").arg(filePathReturn));
+            msg.exec();
+        }
+    });
+
+
+    auto handleLinkClick = [](const QModelIndex &index) {
+        if (index.isValid() && index.column() == colonne::href) {
+            QString link = index.data(Qt::DisplayRole).toString();
+
+            QDesktopServices::openUrl(QUrl(link));
+        }
+    };
+
+    QObject::connect(tableViewNoFollowing, &QTableView::clicked, [&](const QModelIndex &index) {
+        handleLinkClick(index);
+    });
+
+    QObject::connect(tableViewNoFollower, &QTableView::clicked, [&](const QModelIndex &index) {
+        handleLinkClick(index);
+    });
+
+    QObject::connect(tablePendingFollowing, &QTableView::clicked, [&](const QModelIndex &index) {
+        handleLinkClick(index);
+    });
 }
 
 QString MainWindow::selectDirectory()
@@ -57,17 +125,31 @@ QString MainWindow::selectDirectory()
 void MainWindow::populateNoFollowing()
 {
     if(modelNoFollowing)
+    {
         modelNoFollowing->deleteLater();
-    modelNoFollowing=new QStandardItemModel();
+    }
+
+    modelNoFollowing = new QStandardItemModel();
+
     QStringList titHeader;
+
     titHeader << "NAME" << "HREF" << "DATA";
+
     modelNoFollowing->setHorizontalHeaderLabels(titHeader);
+
     tableViewNoFollowing->setModel(modelNoFollowing);
 
     foreach(Profile item,engine.getProfileManagement()->getDontFollowingList())
     {
         QList <QStandardItem *> lItemS;
+
         lItemS << new QStandardItem(item.getName()) << new QStandardItem(item.getHref()) << new QStandardItem(item.getDateTime().toString("dd-MM-yyyy hh:mm"));
+
+        foreach(QStandardItem * items,lItemS)
+        {
+            items->setEditable(false);
+        }
+
         modelNoFollowing->appendRow(lItemS);
     }
 
@@ -87,7 +169,14 @@ void MainWindow::popoluateNoFollower()
     foreach(Profile item,engine.getProfileManagement()->getDontFollowerList())
     {
         QList <QStandardItem *> lItemS;
+
         lItemS << new QStandardItem(item.getName()) << new QStandardItem(item.getHref()) << new QStandardItem(item.getDateTime().toString("dd-MM-yyyy hh:mm"));
+
+        foreach(QStandardItem * items,lItemS)
+        {
+            items->setEditable(false);
+        }
+
         modelNoFollower->appendRow(lItemS);
     }
 
@@ -107,7 +196,14 @@ void MainWindow::pulatePendinfRequestFollowing()
     foreach(Profile item,engine.getProfileManagement()->getPendinFollowingRequestList())
     {
         QList <QStandardItem *> lItemS;
+
         lItemS << new QStandardItem(item.getName()) << new QStandardItem(item.getHref()) << new QStandardItem(item.getDateTime().toString("dd-MM-yyyy hh:mm"));
+
+        foreach(QStandardItem * items,lItemS)
+        {
+            items->setEditable(false);
+        }
+
         modelPendingFollowing->appendRow(lItemS);
     }
 

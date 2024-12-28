@@ -28,6 +28,11 @@ public:
     void popoluateNoFollower();
     void pulatePendinfRequestFollowing();
 
+    enum colonne
+    {
+        href = 1
+    };
+
 private:
     Ui::MainWindow *ui;
 
