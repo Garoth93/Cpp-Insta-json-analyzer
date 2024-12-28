@@ -170,7 +170,7 @@ QList<Profile> Engine::getPendinfRequestFollowingListFromJson(QString path)
         {
             if (!stringListValue.isObject()) continue;
 
-             QJsonObject stringListObj = stringListValue.toObject();
+            QJsonObject stringListObj = stringListValue.toObject();
 
             if (!stringListObj.contains("href") || !stringListObj.contains("value") || !stringListObj.contains("timestamp")) continue;
 
@@ -201,7 +201,23 @@ void Engine::populateFollowingList()
 
 void Engine::populatePendinfRequestFollowingList()
 {
-   profileManagement->setPendinFollowingRequestList(this->getPendinfRequestFollowingListFromJson(pathDirectoryFile));
+    profileManagement->setPendinFollowingRequestList(this->getPendinfRequestFollowingListFromJson(pathDirectoryFile));
+}
+
+bool Engine::createTxtPendingRequest(QString &pathFileReturn, QString dir, QString nomeFile)
+{
+
+    return profileManagement->createTxtPendingRequest(pathFileReturn,dir,nomeFile);
+}
+
+bool Engine::createTxtDontFollowing(QString &pathFileReturn, QString dir, QString nomeFile)
+{
+    return profileManagement->createTxtDontFollowing(pathFileReturn,dir,nomeFile);
+}
+
+bool Engine::createTxtDontFollower(QString &pathFileReturn, QString dir, QString nomeFile)
+{
+    return profileManagement->createTxtDontFollower(pathFileReturn,dir,nomeFile);
 }
 
 Engine::Engine() {}

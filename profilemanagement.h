@@ -27,6 +27,10 @@ public:
 
     QList<Profile> getPendinFollowingRequestList() const;
     void setPendinFollowingRequestList(const QList<Profile> &newPendinFollowingRequestList);
+
+    bool createTxtPendingRequest(QString &pathFileReturn,QString dir,QString nomeFile = "pendingRequest.txt");
+    bool createTxtDontFollowing(QString &pathFileReturn,QString dir,QString nomeFile = "dontFollowing.txt");
+    bool createTxtDontFollower(QString &pathFileReturn,QString dir,QString nomeFile = "dontFollowing.txt");
 };
 
 #endif // PROFILEMANAGEMENT_H

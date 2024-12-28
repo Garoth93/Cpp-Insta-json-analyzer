@@ -1,6 +1,8 @@
 #include "profilemanagement.h"
 #include "qdebug.h"
 
+#include <QDir>
+
 QList<Profile> ProfileManagement::getFollowingList() const
 {
     return followingList;
@@ -80,6 +82,84 @@ void ProfileManagement::setPendinFollowingRequestList(const QList<Profile> &newP
 {
     pendinFollowingRequestList.clear();
     pendinFollowingRequestList = newPendinFollowingRequestList;
+}
+
+bool ProfileManagement::createTxtPendingRequest(QString &pathFileReturn, QString dir, QString nomeFile)
+{
+    QDir directory(dir);
+    QString filePath = directory.filePath(nomeFile);
+
+    pathFileReturn = filePath;
+
+    QFile fileTxt(filePath);
+    if (!fileTxt.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qCritical() << "Impossibile aprire il file per la scrittura";
+        return false;
+    }
+
+    QTextStream out(&fileTxt);
+
+    foreach(Profile item,this->getPendinFollowingRequestList())
+    {
+        out << item.getHref() << "\n";
+    }
+
+    fileTxt.close();
+
+    return true;
+}
+
+bool ProfileManagement::createTxtDontFollowing(QString &pathFileReturn, QString dir, QString nomeFile)
+{
+    QDir directory(dir);
+    QString filePath = directory.filePath(nomeFile);
+
+    pathFileReturn = filePath;
+
+    QFile fileTxt(filePath);
+    if (!fileTxt.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qCritical() << "Impossibile aprire il file per la scrittura";
+        return false;
+    }
+
+    QTextStream out(&fileTxt);
+
+    foreach(Profile item,this->getDontFollowingList())
+    {
+        out << item.getName() << " - " << item.getHref() << "\n";
+    }
+
+    fileTxt.close();
+
+    return true;
+}
+
+bool ProfileManagement::createTxtDontFollower(QString &pathFileReturn, QString dir, QString nomeFile)
+{
+    QDir directory(dir);
+    QString filePath = directory.filePath(nomeFile);
+
+    pathFileReturn = filePath;
+
+    QFile fileTxt(filePath);
+    if (!fileTxt.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qCritical() << "Impossibile aprire il file per la scrittura";
+        return false;
+    }
+
+    QTextStream out(&fileTxt);
+
+    foreach(Profile item,this->getDontFollowerList())
+    {
+        out << item.getName() << " - " << item.getHref() << "\n";
+    }
+
+    fileTxt.close();
+
+    return true;
 }
 
 ProfileManagement::ProfileManagement() {}

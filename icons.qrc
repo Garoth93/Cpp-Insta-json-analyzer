@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>icons/directory.png</file>
         <file>icons/process.png</file>
+        <file>icons/csv.png</file>
+        <file>icons/analyzing.png</file>
+        <file>icons/analyzing.ico</file>
     </qresource>
 </RCC>
