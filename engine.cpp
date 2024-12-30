@@ -206,7 +206,6 @@ void Engine::populatePendinfRequestFollowingList()
 
 bool Engine::createTxtPendingRequest(QString &pathFileReturn, QString dir, QString nomeFile)
 {
-
     return profileManagement->createTxtPendingRequest(pathFileReturn,dir,nomeFile);
 }
 

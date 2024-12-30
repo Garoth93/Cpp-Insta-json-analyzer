@@ -25,6 +25,8 @@ void MainWindow::init()
 {
     this->setWindowTitle("Instagram json data analyzer");
 
+    engine.init();
+
     tableViewNoFollowing = ui->tableViewNoFollowing;
     tableViewNoFollower = ui->tableViewNoFollower;
     tablePendingFollowing = ui->tablePendingRequest;
